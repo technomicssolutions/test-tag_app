@@ -75,5 +75,9 @@ class add_subject(View):
         if request.POST:    
             subject = Subject(name = request.POST['name'], description=request.POST['desc'], order=request.POST['order'])
             subject.save()
-        return render(request, 'admin_view.html', {})
+        subject = Subject.objects.all().order_by('order')
+        context = {
+            'subject': subject,
+        }
+        return HttpResponseRedirect(reverse('add'))
     # subject = Subject

@@ -1,5 +1,9 @@
 <html>
 	<h2>Welcome</h2>
+	<head>
+		<link rel="stylesheet" type="text/css" href="/static/style.css">
+		
+	</head>
 	<body>
 		{% if subject %}
 			<ul class="subject">
@@ -18,5 +22,7 @@
 					<li><a href="{% url 'add_subject' %}">Add a Subject</a></li>
 				</ul>
 		{% endif %}
+		
 	</body>
+
 </html>

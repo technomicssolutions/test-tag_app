@@ -1,0 +1,50 @@
+li input {
+    position: absolute;
+    left: 0;
+    margin-left: 0;
+    opacity: 0;
+    z-index: 2;
+    cursor: pointer;
+    height: 1em;
+    width: 1em;
+    top: 0;
+}
+li label {
+    background: url(folder-horizontal.png) 15px 1px no-repeat;
+    cursor: pointer;
+    display: block;
+    padding-left: 37px;
+}
+
+li input + ol {
+    background: url(toggle-small-expand.png) 40px 0 no-repeat;
+    margin: -0.938em 0 0 -44px; /* 15px */
+    display: block;
+    height: 1em;
+}
+
+li input + ol > li {
+    display: none;
+    margin-left: -14px !important;
+    padding-left: 1px;
+}
+
+li label {
+    background: url(folder.png) 15px 1px no-repeat;
+}
+li.file a {
+    background: url(document.png) 0 -1px no-repeat;
+    color: #fff;
+    padding-left: 21px;
+    text-decoration: none;
+    display: block;
+}
+
+li {
+    position: relative;
+    margin-left: -15px;
+    list-style: none;
+}
+li.file {
+    margin-left: -1px !important;
+}

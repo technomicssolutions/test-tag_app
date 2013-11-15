@@ -1,0 +1,9 @@
+#usersTreePanel .demo-userNode .x-grid-cell-inner {
+    height: 30px;
+    font-size: 1.2em;
+}
+
+.demo-userNodeIcon {
+    height: 25px;
+    width: 25px;
+}

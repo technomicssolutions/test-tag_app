@@ -10,5 +10,6 @@ urlpatterns = patterns('',
     url(r'^problems/', include('problems.urls', namespace="problems")),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^add/',views.admin_view, name="add"),
-    url(r'^add_subject/',views.add_subject.as_view(), name = "add_subject"),
+    url(r'^add_subject/',views.AddSubjectView.as_view(), name = "add_subject"),
+    # url(r'^add_topic/',views.AddTopic.as_view(), name="add_topic"),
 )

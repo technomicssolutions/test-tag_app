@@ -1,14 +1,71 @@
 <html>
-	<h3>Add a Subject </h3>
-	<body>
-		<form method="post">{% csrf_token %}
-			<label for="name">Name</label><br>
-			<input type="text" name="name"><br>
-			<label for="desc">Description</label><br>
-			<textarea name="desc"></textarea> <br>
-			<label for="order">Order</label><br>
-			<input type="text" name="order"><br>
-			<input type="submit" value="Submit"> 
-		</form>
-	</body>
+    <h3>Add a Subject </h3>
+    <head>
+        <script type="text/javascript" src="/static/js/mootools-core-1.4.2-full-compat-yc.js"></script>
+        <script type="text/javascript" src="/static/js/mootools-more-1.4.0.1.js"></script>
+        <script type="text/javascript">
+            window.addEvent('domready', function(){
+                $$('.add_topic').hide();
+                $$('.add_concept').hide();
+                $$('.add_new_concept').hide();
+                $$('.add_new_topic').addEvent('click', function(e){
+                    e.stop();
+                    $$('.add_topic').show();
+                    $$('.add_new_concept').show();
+                }); 
+                $$('.add_new_concept').addEvent('click', function(e){
+                    e.stop();
+                    $$('.add_concept').show();
+                }); 
+                $$('.save_subject').addEvent('click', function(e){
+
+                    var subject = $$('.subject_form').toQueryString();
+                    var url = 'add_subject/';
+                    var ajaxRequest = new Request({
+                        url: url,
+                        method: 'post',
+                        data: subject,
+                        onSuccess: function(){
+                            console.log('You have successfully sent the Message');
+                        },
+                        onFailure: function(){
+                            console.log('failure');
+                            console.log(this.getHeader('Status'));
+                        },
+                        onException: function(headerName, value) {
+                            console.log('exception');
+                            console.log(headerName+': '+value);
+                        }
+                    });
+                    ajaxRequest.send(); 
+                    // console.log('e==='+e)
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <form method="post" class="subject_form">{% csrf_token %}
+            <label for="name">Name</label><br>
+            <input type="text" name="name"><br>
+            <label for="desc">Description</label><br>
+            <textarea name="desc"></textarea> <br>
+            <label for="order">Order</label><br>
+            <input type="text" name="order"><br>
+            <a href="#" class="add_new_topic">Add a Topic</a><br>
+            <div class="add_topic">
+                <label for="topic_name">Name</label><br>
+                <input type="text" name="topic_name"><br>
+                <label for="topic_desc">Description</label><br>
+                <textarea name="topic_desc"></textarea> <br>
+            </div>
+            <a href="#" class="add_new_concept">Add a Concept</a><br>
+            <div class="add_concept">
+                <label for="concept_name">Name</label><br>
+                <input type="text" name="concept_name"><br>
+                <label for="concept_desc">Description</label><br>
+                <textarea name="concept_desc"></textarea> <br>
+            </div>
+            <input type="submit" value="Save" class="save_subject"> 
+        </form>
+    </body>
 </html>

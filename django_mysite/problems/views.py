@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 from django.views.generic.base import View
 from django.contrib.auth import authenticate, login, logout
 
-from problems.models import Problem, Choice, Subject
+from problems.models import Problem, Choice, Subject, Topic, Concept
 
 
 def vote(request, problem_id):
@@ -67,17 +67,43 @@ def admin_view(request):
     }
     return render(request, 'admin_view.html' , context)
 
-class add_subject(View):
+class AddSubjectView(View):
     def get(self, request):
         return render(request, 'add_subject.html', {})
 
     def post(self, request):
-        if request.POST:    
+        if request.POST:     
             subject = Subject(name = request.POST['name'], description=request.POST['desc'], order=request.POST['order'])
+            subj_total = Subject.objects.all()
+            if subj_total:
+                for subj in subj_total:
+                    if subject.order >= subj.order:
+                        subj.order = subj.order + 1
+                        subj.save()
+                    else:
+                        subj.save()
             subject.save()
+            if request.POST['topic_name'] and request.POST['topic_desc']:
+                topic = Topic(subject = subject, name = request.POST['topic_name'], description = request.POST['topic_desc'])
+                topic.save()
+                if request.POST['concept_name'] and request.POST['concept_desc']:
+                    concept = Concept(topic = topic, name = request.POST['topic_name'], description = request.POST['topic_desc'])
+                    concept.save()
         subject = Subject.objects.all().order_by('order')
         context = {
             'subject': subject,
         }
+        return HttpResponseRedirect(reverse('add'))
+
+class AddTopic(View):
+    def post(self, request):
+        if request.POST: 
+            print "post", request.POST   
+        #     subject = Subject(name = request.POST['name'], description=request.POST['desc'], order=request.POST['order'])
+        #     subject.save()
+        # subject = Subject.objects.all().order_by('order')
+        # context = {
+        #     'subject': subject,
+        # }
         return HttpResponseRedirect(reverse('add'))
     # subject = Subject

@@ -1,0 +1,20 @@
+<html>
+	<h2>Welcome</h2>
+	{% if subject %}
+		<ul class="subject">
+                {% for subj in subject %}                        
+                    <li clas="subje_li">{{ subj.name }}
+                        <!-- <ul class="submenu">
+                            {% for submenu in menu.submenu_set.all %}
+                                <li class="submenu_li"><a href="{% url 'render_submenupage' menu_slug=menu.slug submenuslug=submenu.slug %}">{{ submenu.title}}</a></li>
+                            {% endfor %}
+                        </ul> -->
+                    </li>                        
+                {% endfor %}
+            </ul>
+	{% else %}
+		<ul>
+			<li><a href="{% url 'add_subject' %}">+</a></li>
+		</ul>
+	{% endif %}
+</html>

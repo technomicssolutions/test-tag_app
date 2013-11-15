@@ -1,0 +1,20 @@
+<!-- {% if request.user.is_superuser %}
+    ...
+    <button>...</button>
+    ...
+{% else %}
+...
+{% endif %} -->
+<html>
+	<head></head>
+	<h2>Welcome</h2>
+	<body>
+		<form method="post" action="{% url 'add' %}">{% csrf_token %}
+			<label for="username">Username</label>
+			<input type="text" class="login_tabs" name="username"value="" >
+			<label for="password">Password</label>
+			<input type="password" class="login_tabs" name="password" value="">
+			<input type="submit" value="Submit">
+		</form>
+	</body>
+</html>

@@ -60,16 +60,20 @@ class HomeView(View):
 
         return render(request, 'admin_view.html',{})
 
-
-class AdminAddView(View):
-    def get(self, request):
-        subject =  Subject.objects.all().order_by('order');
-        context = {
-            'subject': subject,
-        }
-        return render(request, "admin_view.html" , {})
+def admin_view(request):
+    subject = Subject.objects.all().order_by('order')
+    context = {
+        'subject': subject,
+    }
+    return render(request, 'admin_view.html' , context)
 
 class add_subject(View):
     def get(self, request):
-        return render(request, "add_subject.html", {})
+        return render(request, 'add_subject.html', {})
+
+    def post(self, request):
+        if request.POST:    
+            subject = Subject(name = request.POST['name'], description=request.POST['desc'], order=request.POST['order'])
+            subject.save()
+        return render(request, 'admin_view.html', {})
     # subject = Subject

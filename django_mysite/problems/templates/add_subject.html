@@ -3,17 +3,17 @@
         <script type="text/javascript" src="/static/js/mootools-core-1.4.2-full-compat-yc.js"></script>
         <script type="text/javascript" src="/static/js/mootools-more-1.4.0.1.js"></script>
         <script type="text/javascript" src="/static/js/common.js"></script>
-        <link rel="stylesheet" type="text/css" href="/static/style.css">
+        <link rel="stylesheet" type="text/css" href="/static/css/style.css">
     </head>
     <body>
         
         {% if subjects %}
             <ul class="subject">
                     {% for subj in subjects %}                        
-                        <li ><a href="#" style="text-decoration: none;" class="subjects_li shrink"> + </a> {{ subj.name }} <a href="{% url 'delete_tag' tag_id=subj.id %}"> x </a>
+                        <li ><a href="#" class="subjects_li shrink"> + </a> {{ subj.name }} <a href="{% url 'delete_tag' tag_id=subj.id %}"> x </a>
                             <ul class="submenu">
                                 {% for topic in subj.topic_set.all %}
-                                    <li class="submenu_li"><a href="#" style="text-decoration: none;" class="subjects_li shrink"> + </a>{{ topic.name}} <a href="{% url 'delete_topic' topic_id=topic.id %}"> x </a>
+                                    <li class="submenu_li"><a href="#" class="subjects_li shrink"> + </a>{{ topic.name}} <a href="{% url 'delete_topic' topic_id=topic.id %}"> x </a>
                                         <ul class="submenu">
                                             {% for concept in topic.concept_set.all %}
                                                 <li class="submenu_li"> {{ concept.name}} <a href="{% url 'delete_concept' concept_id=concept.id %}"> x </a>

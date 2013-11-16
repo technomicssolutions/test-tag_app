@@ -38,14 +38,8 @@ class LoginView(View):
                 data_dict = request.POST
                 user = authenticate(username = data_dict['username'], password = data_dict['password'])
                 if user is not None:
-                    if user.is_superuser:
                         login(request, user)
                         return HttpResponseRedirect(reverse('tree_view'))
-                    else:
-                        context = {
-                            'error': 'Your are not permitted to this section',
-                        }
-                        return render(request, template_name, context)
                 else:
                     context = {
                         'error': 'Invalid Login, Please check your username and password',

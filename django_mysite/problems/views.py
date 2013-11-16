@@ -68,22 +68,40 @@ class AddSubjectView(View):
             })
 
     def post(self, request):
-        if request.POST:             
-            subject = Subject.objects.create(name = request.POST['subject'])
+        if request.POST: 
+            if request.POST['subject']:            
+                subject = Subject.objects.create(name = request.POST['subject'])
+            else:
+                context = {
+                    'error': 'Name of the Subject cannot be null',
+                }
+                return render(request, 'add_subject.html', context)
         return HttpResponseRedirect(reverse('tree_view'))
 
 class AddTopicView(View):
     def post(self, request):
         if request.POST: 
-            subject = Subject.objects.get(id=request.POST['subject'])
-            topic = Topic.objects.create(name = request.POST['topic'], subject=subject)
+            if request.POST['subject'] and request.POST['topic']:
+                subject = Subject.objects.get(id=request.POST['subject'])
+                topic = Topic.objects.create(name = request.POST['topic'], subject=subject)
+            else:
+                context = {
+                    'error': 'Name of the Topic cannot be null',
+                }
+                return render(request, 'add_subject.html', context)
         return HttpResponseRedirect(reverse('tree_view'))
 
 class AddConceptView(View):
     def post(self, request):
         if request.POST: 
-            topic = Topic.objects.get(id=request.POST['topic'])
-            concept = Concept.objects.create(name = request.POST['concept'], topic=topic)
+            if request.POST['topic'] and request.POST['concept']:
+                topic = Topic.objects.get(id=request.POST['topic'])
+                concept = Concept.objects.create(name = request.POST['concept'], topic=topic)
+            else:
+                context = {
+                    'error': 'Name of the Concept cannot be null',
+                }
+                return render(request, 'add_subject.html', context)
         return HttpResponseRedirect(reverse('tree_view'))
 
 
@@ -91,14 +109,7 @@ class DeleteTagView(View):
     def get(self, request, tag_id):
         if tag_id:
             subject = Subject.objects.get(id = tag_id)
-            order = subject.order
             subject.delete()
-            subj_total = Subject.objects.all()
-            if subj_total:
-                for subj in subj_total:
-                    if subj.order > order:
-                        subj.order = subj.order - 1
-                        subj.save()
                         
         return HttpResponseRedirect(reverse('tree_view'))    
 

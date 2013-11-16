@@ -25,13 +25,13 @@ def vote(request, problem_id):
                 # user hits the Back button.
                 return HttpResponseRedirect(reverse('problems:results', args=(p.id,)))
 
-class HomeView(View):
+class LoginView(View):
     def get(self, request):
         context = {}
-        return render(request, 'home.html',context)
+        return render(request, 'login.html',context)
 
     def post(self, request):
-        template_name = 'home.html'
+        template_name = 'login.html'
                         
         if request.POST:
             if request.POST['username'] and request.POST['password']:
@@ -117,3 +117,6 @@ class DeleteTopicView(View):
             topic.delete()                    
         return HttpResponseRedirect(reverse('tree_view'))    
 
+def logout_view(request):
+    logout(request)
+    return HttpResponseRedirect(reverse('tree_view'))

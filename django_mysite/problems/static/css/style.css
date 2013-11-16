@@ -1,3 +1,8 @@
+body {
+	font-family: Arial;
+    background-color: #FFFFFF;
+}
+
 li {
     position: relative;
     margin-left: -15px;
@@ -9,4 +14,36 @@ li {
 
 a {
     text-decoration: none;
+}
+
+p {
+    text-align: justify;
+}
+
+.login_form {
+	width: 340px;
+    height: 200px;
+    margin: auto;
+    box-shadow: 0 5px 5px 3px #CCCCCC;
+}
+
+.login_form form {
+	margin: auto;
+	width: 245px;
+	padding-top: 36px;
+}
+
+.container {
+    width: 1024px;
+    height: 100%;
+    margin: auto;
+}
+
+.container .content{
+	min-height: 500px;
+}
+
+.header {
+	height:150px;
+	width: auto; 
 }

@@ -7,18 +7,16 @@
 {% endif %} -->
 <html>
 	<head></head>
-	<h2>Welcome</h2>
 	<body>
-		<form method="post" action="{% url 'add' %}">{% csrf_token %}
-			<label for="username">Username</label>
-			<input type="text" class="login_tabs" name="username"value="" >
-			<label for="password">Password</label>
-			<input type="password" class="login_tabs" name="password" value="">
+		<form method="post" action="{% url 'home' %}">{% csrf_token %}
+			{{error}}
+			<label for="username">Username</label><br>
+			<input type="text" class="login_tabs" name="username"value="" ><br>
+			<label for="password">Password</label><br>
+			<input type="password" class="login_tabs" name="password" value=""><br>
 			<input type="submit" value="Submit">
 		</form>
 	</body>
-	{% if error %}
-		{error}
-	{% endif %}
+	
 </html>
 

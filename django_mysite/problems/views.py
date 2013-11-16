@@ -31,6 +31,8 @@ class HomeView(View):
         return render(request, 'home.html',context)
 
     def post(self, request):
+        template_name = 'home.html'
+                        
         if request.POST:
             if request.POST['username'] and request.POST['password']:
                 data_dict = request.POST
@@ -38,72 +40,80 @@ class HomeView(View):
                 if user is not None:
                     if user.is_superuser:
                         login(request, user)
-                        return render(request, 'admin_view.html',{})
+                        return HttpResponseRedirect(reverse('tree_view'))
                     else:
-                        template_name = 'home.html'
                         context = {
                             'error': 'Your are not permitted to this section',
                         }
                         return render(request, template_name, context)
                 else:
-                    template_name = 'home.html'
                     context = {
                         'error': 'Invalid Login, Please check your username and password',
                     }
                     return render(request, template_name, context)
             else:
-                template_name = 'home.html'
                 context = {
                     'error':'Username and Password cannot be null',
                 }
                 return render(request, template_name, context)
 
-        return render(request, 'admin_view.html',{})
-
-def admin_view(request):
-    subject = Subject.objects.all().order_by('order')
-    context = {
-        'subject': subject,
-    }
-    return render(request, 'admin_view.html' , context)
+        return HttpResponseRedirect(reverse('tree_view'))
 
 class AddSubjectView(View):
     def get(self, request):
-        return render(request, 'add_subject.html', {})
+        subjects = Subject.objects.all()
+
+        return render(request, 'add_subject.html', {
+                'subjects': subjects
+            })
 
     def post(self, request):
-        if request.POST:     
-            subject = Subject(name = request.POST['name'], description=request.POST['desc'], order=request.POST['order'])
+        if request.POST:             
+            subject = Subject.objects.create(name = request.POST['subject'])
+        return HttpResponseRedirect(reverse('tree_view'))
+
+class AddTopicView(View):
+    def post(self, request):
+        if request.POST: 
+            subject = Subject.objects.get(id=request.POST['subject'])
+            topic = Topic.objects.create(name = request.POST['topic'], subject=subject)
+        return HttpResponseRedirect(reverse('tree_view'))
+
+class AddConceptView(View):
+    def post(self, request):
+        if request.POST: 
+            topic = Topic.objects.get(id=request.POST['topic'])
+            concept = Concept.objects.create(name = request.POST['concept'], topic=topic)
+        return HttpResponseRedirect(reverse('tree_view'))
+
+
+class DeleteTagView(View):
+    def get(self, request, tag_id):
+        if tag_id:
+            subject = Subject.objects.get(id = tag_id)
+            order = subject.order
+            subject.delete()
             subj_total = Subject.objects.all()
             if subj_total:
                 for subj in subj_total:
-                    if subject.order >= subj.order:
-                        subj.order = subj.order + 1
+                    if subj.order > order:
+                        subj.order = subj.order - 1
                         subj.save()
-                    else:
-                        subj.save()
-            subject.save()
-            if request.POST['topic_name'] and request.POST['topic_desc']:
-                topic = Topic(subject = subject, name = request.POST['topic_name'], description = request.POST['topic_desc'])
-                topic.save()
-                if request.POST['concept_name'] and request.POST['concept_desc']:
-                    concept = Concept(topic = topic, name = request.POST['topic_name'], description = request.POST['topic_desc'])
-                    concept.save()
-        subject = Subject.objects.all().order_by('order')
-        context = {
-            'subject': subject,
-        }
-        return HttpResponseRedirect(reverse('add'))
+                        
+        return HttpResponseRedirect(reverse('tree_view'))    
 
-class AddTopic(View):
-    def post(self, request):
-        if request.POST: 
-            print "post", request.POST   
-        #     subject = Subject(name = request.POST['name'], description=request.POST['desc'], order=request.POST['order'])
-        #     subject.save()
-        # subject = Subject.objects.all().order_by('order')
-        # context = {
-        #     'subject': subject,
-        # }
-        return HttpResponseRedirect(reverse('add'))
-    # subject = Subject
+
+class DeleteConceptView(View):
+    def get(self, request, concept_id):
+        if concept_id:
+            concept = Concept.objects.get(id = concept_id)
+            concept.delete()                    
+        return HttpResponseRedirect(reverse('tree_view'))  
+
+class DeleteTopicView(View):
+    def get(self, request, topic_id):
+        if topic_id:
+            topic = Topic.objects.get(id = topic_id)
+            topic.delete()                    
+        return HttpResponseRedirect(reverse('tree_view'))    
+

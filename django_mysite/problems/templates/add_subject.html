@@ -1,71 +1,53 @@
 <html>
-    <h3>Add a Subject </h3>
     <head>
         <script type="text/javascript" src="/static/js/mootools-core-1.4.2-full-compat-yc.js"></script>
         <script type="text/javascript" src="/static/js/mootools-more-1.4.0.1.js"></script>
-        <script type="text/javascript">
-            window.addEvent('domready', function(){
-                $$('.add_topic').hide();
-                $$('.add_concept').hide();
-                $$('.add_new_concept').hide();
-                $$('.add_new_topic').addEvent('click', function(e){
-                    e.stop();
-                    $$('.add_topic').show();
-                    $$('.add_new_concept').show();
-                }); 
-                $$('.add_new_concept').addEvent('click', function(e){
-                    e.stop();
-                    $$('.add_concept').show();
-                }); 
-                $$('.save_subject').addEvent('click', function(e){
-
-                    var subject = $$('.subject_form').toQueryString();
-                    var url = 'add_subject/';
-                    var ajaxRequest = new Request({
-                        url: url,
-                        method: 'post',
-                        data: subject,
-                        onSuccess: function(){
-                            console.log('You have successfully sent the Message');
-                        },
-                        onFailure: function(){
-                            console.log('failure');
-                            console.log(this.getHeader('Status'));
-                        },
-                        onException: function(headerName, value) {
-                            console.log('exception');
-                            console.log(headerName+': '+value);
-                        }
-                    });
-                    ajaxRequest.send(); 
-                    // console.log('e==='+e)
-                });
-            });
-        </script>
+        <script type="text/javascript" src="/static/js/common.js"></script>
+        <link rel="stylesheet" type="text/css" href="/static/style.css">
     </head>
     <body>
-        <form method="post" class="subject_form">{% csrf_token %}
-            <label for="name">Name</label><br>
-            <input type="text" name="name"><br>
-            <label for="desc">Description</label><br>
-            <textarea name="desc"></textarea> <br>
-            <label for="order">Order</label><br>
-            <input type="text" name="order"><br>
-            <a href="#" class="add_new_topic">Add a Topic</a><br>
-            <div class="add_topic">
-                <label for="topic_name">Name</label><br>
-                <input type="text" name="topic_name"><br>
-                <label for="topic_desc">Description</label><br>
-                <textarea name="topic_desc"></textarea> <br>
-            </div>
-            <a href="#" class="add_new_concept">Add a Concept</a><br>
-            <div class="add_concept">
-                <label for="concept_name">Name</label><br>
-                <input type="text" name="concept_name"><br>
-                <label for="concept_desc">Description</label><br>
-                <textarea name="concept_desc"></textarea> <br>
-            </div>
-            <input type="submit" value="Save" class="save_subject"> 
+        
+        {% if subjects %}
+            <ul class="subject">
+                    {% for subj in subjects %}                        
+                        <li ><a href="#" style="text-decoration: none;" class="subjects_li shrink"> + </a> {{ subj.name }} <a href="{% url 'delete_tag' tag_id=subj.id %}"> x </a>
+                            <ul class="submenu">
+                                {% for topic in subj.topic_set.all %}
+                                    <li class="submenu_li"><a href="#" style="text-decoration: none;" class="subjects_li shrink"> + </a>{{ topic.name}} <a href="{% url 'delete_topic' topic_id=topic.id %}"> x </a>
+                                        <ul class="submenu">
+                                            {% for concept in topic.concept_set.all %}
+                                                <li class="submenu_li"> {{ concept.name}} <a href="{% url 'delete_concept' concept_id=concept.id %}"> x </a>
+                                            {% endfor %}
+                                            <form name="concept_form" action="{% url 'add_concept' %}" method="post">  
+                                                {% csrf_token %}         
+                                                New concept: <input type="text" name="concept" /> 
+                                                <input type="hidden" name="topic" value='{{topic.id}}' />
+                                                <input type="submit" name="submit" value='+' />
+                                            </form>
+                                        </ul>                                
+                                    </li>
+                                {% endfor %}
+                                <form name="topic_form" action="{% url 'add_topic' %}" method="post">  
+                                    {% csrf_token %}         
+                                    New topic: <input type="text" name="topic" /> 
+                                    <input type="hidden" name="subject" value="{{subj.id}}"/> 
+                                    <input type="submit" name="submit" value='+' />
+                                </form>
+                            </ul>
+                            
+
+                        </li> 
+
+                    {% endfor %}
+
+                </ul>
+        {% endif %}
+        
+        <form name="subject_form" action="{% url 'tree_view' %}" method="post">  
+            {% csrf_token %}         
+            New Subject: <input type="text" name="subject" /> 
+            <input type="submit" name="submit" value='+' />
         </form>
+        
     </body>
 </html>
